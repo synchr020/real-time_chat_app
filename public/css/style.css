@@ -1,0 +1,84 @@
+.ctn {
+border-radius: 2%;
+}
+
+.hx {
+    height: 36em;
+    padding: 0;
+    margin: 0;
+
+}
+
+.b1{
+border-top-left-radius: 0.5rem;
+border-bottom-left-radius: 0.5rem;
+padding: 0;
+margin: 0;
+}
+.b2{
+border-top-right-radius: 0.5rem;
+border-bottom-right-radius: 0.5rem;
+}
+
+.mes-box{
+ background-color: whitesmoke;
+    height: 31.57em;
+    overflow-y: auto;
+}
+
+.mhd{
+ width: 15em;
+ 
+}
+.mhdy{
+width: 15em;
+display: flex;
+margin-left: auto;
+
+}
+
+.on{
+display: block;
+text-align: center;
+}
+
+.on1{
+text-align: center;
+display: block;
+}
+.msg1{
+    border-top-right-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+    text-align: start;
+}
+
+.msg2{
+    border-top-left-radius: 1rem;
+    border-bottom-left-radius: 1rem;
+    text-align: end;
+    
+
+}
+
+.time2{
+   display: flex;
+    margin-right: auto;
+}
+
+.lbd{
+    overflow-y: auto;
+    height: 29.9em;
+}
+
+.sbox{
+
+}
+
+.ip1{
+width: 50.6rem;
+}
+
+.fb-btn{
+background-color: aqua;
+width: auto;
+}

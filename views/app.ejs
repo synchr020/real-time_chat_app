@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Hello Bulma!</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="script" href="/js/main.js">
+    <!-- <script src="http://localhost:3001/socket.io/socket.io.js"></script> -->
+    <!-- <script src="/socket.io/socket.io.js"></script> -->
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"
+        integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+"
+        crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+
+    <div class="container mt-6 ">
+        <div class="columns mx-6 hx">
+            <div class="has-background-primary b1 column  is-one-quarter ">
+                <h1 class="has-text-centered title is-1 my-4">
+                    <p class="is-inline">&#128512;</p>Chatapp
+                </h1>
+                <article class=" ml-3 message lbd is-danger">
+                    <div class="message-header on1">
+                        <p class="on ">Người đang tham gia </p>
+
+                    </div>
+                    <div class="message-body" id="user-board">
+
+
+                        <p class="is-size-5 my-2">
+                            <%=user.displayName %> <span class="tag is-success is-medium">Online</span>
+                        </p>
+
+                    </div>
+                </article>
+            </div>
+
+            <div class="has-background-primary b2 column is-three-quarters ">
+                <div class="box mes-box m-0" id="mesbox">
+
+
+
+                </div>
+                <form action="#" id="msgForm">
+                    <input class="input is-rounded mt-2 mx-0 ip1" type="text" name="msg"
+                        placeholder="Nhập tin nhắn ở đây.">
+                    <button class="button mt-2 ml-1 is-rounded"> Gửi </button>
+
+                </form>
+            </div>
+        </div>
+        <div>
+            <form action="/auth/facebook/signout" id="outBtn">
+                <button class="button mt-2 ml-1 is-rounded">Đăng xuất</button>
+            </form>
+        </div>
+        <script>
+            const socket = io();
+            const mbox = document.querySelector("#mesbox");
+            const msgForm = document.getElementById('msgForm');
+            const outBtn = document.querySelector("#outBtn");
+            addUsers();
+            appendNotification("Chào mừng bạn đến với đoạn chat!");
+
+            socket.on('message', mes => {
+                console.log(mes);
+                appendMessages(mes.content, mes.time)
+                msgForm.msg.value = '';
+                mbox.scrollTop = mbox.scrollHeight;
+            })
+            
+
+            msgForm.addEventListener('submit', e => {
+                e.preventDefault();
+                const mess = msgForm.msg.value;
+            
+                console.log(`submit ` + mess);
+                socket.emit('chatmessage', mess);
+                
+            })
+
+            outBtn.addEventListener('submit', e => {
+                alert("Bạn sẽ mất lịch sử đoạn chat.")
+            })
+
+
+            function appendMessages(message, time) {
+
+                const xxx = document.createElement("div");
+
+                xxx.innerHTML = `<article class=" m-2 ">
+
+                        <div class=" message-header has-background-grey-darker is-justify-content-end  mhdy">
+                             <span class="time2">${time}</span>
+                            <p><%=user.displayName %></p>
+
+                        </div>
+
+                        <div class=" ">
+
+                            <div class="p-3 has-background-primary msg2  has-text-light">
+                                <p>${message} 
+                                </p>
+                            </div>
+                        </div>
+
+                    </article>
+`
+                    ;
+                mbox.appendChild(xxx);
+            }
+
+
+
+            function appendNotification(message) {
+
+                const xxx = document.createElement("div");
+
+                xxx.innerHTML = `<article class=" m-2">
+                        <div class="message-header has-background-grey-darker mhd">
+                            <p>ChatBot</p>
+                            
+                        </div>
+                        <div class=" ">
+
+                            <div class="p-3 has-background-danger msg1 has-text-light">
+                                <p> ${message}
+
+                                </p>
+                            </div>
+                    </article>
+`
+                    ;
+                mbox.appendChild(xxx);
+            }
+
+            function addUsers() {
+                const user = document.querySelector("#user-board");
+                const newUs = document.createElement("div");
+                newUs.innerHTML = `<p class="is-size-5 my-2">
+                            <%=user.displayName %> <span class="tag is-success is-medium">Online</span>
+                        </p>`
+                user.appendChild(newUs);
+            }
+        </script>
+</body>
+
+</html>
