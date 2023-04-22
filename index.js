@@ -14,12 +14,13 @@ const botName = "ChatBot";
 const Message = require('./models/messages');
 
 require('dotenv').config()
+
 //const dbURL = "mongodb://127.0.0.1:27017/rtapp";
-const dbURL = process.env.dbUrl;
+const dbURL = process.env.dbURL;
 const connectDatabase = async () => {
   try {
     
-    
+    console.log(dbURL);
     await mongoose.connect(dbURL);
 
     console.log("connected to database");
