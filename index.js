@@ -14,7 +14,7 @@ const botName = "ChatBot";
 const Message = require('./models/messages');
 
 require('dotenv').config()
-//const dbUrl = "mongodb://127.0.0.1:27017/rtapp";
+//const dbURL = "mongodb://127.0.0.1:27017/rtapp";
 const dbURL = process.env.dbUrl;
 const connectDatabase = async () => {
   try {
