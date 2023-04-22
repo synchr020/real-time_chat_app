@@ -16,16 +16,20 @@ const Message = require('./models/messages');
 require('dotenv').config()
 //const dbUrl = "mongodb://127.0.0.1:27017/rtapp";
 const dbUrl = process.env.dbUrl;
-mongoose.set('strictQuery', true);
-mongoose.connect(dbUrl, {
+const connectDatabase = async () => {
+  try {
+    mongoose.set("useNewUrlParser", true);
     
-})
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-    console.log("Database connected.");
-});
+    await mongoose.connect(dbUrl);
 
+    console.log("connected to database");
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
+
+connectDatabase();
 
 
 
