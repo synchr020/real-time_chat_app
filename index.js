@@ -74,7 +74,7 @@ io.on('connection', (socket) => {
 
       async (message) => {
        
-        const user1 = await User.findOne({FBId : socket.user.id});
+        const user1 = await User.find({FBId : socket.user.id});
         console.log(user1._id);
         const mes = new Message({
           content: message,
