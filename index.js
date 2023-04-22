@@ -15,12 +15,12 @@ const Message = require('./models/messages');
 
 require('dotenv').config()
 //const dbUrl = "mongodb://127.0.0.1:27017/rtapp";
-const dbUrl = process.env.dbUrl;
+const dbURL = process.env.dbUrl;
 const connectDatabase = async () => {
   try {
     
     
-    await mongoose.connect(dbUrl);
+    await mongoose.connect(dbURL);
 
     console.log("connected to database");
   } catch (error) {
