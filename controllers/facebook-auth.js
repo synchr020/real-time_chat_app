@@ -10,8 +10,8 @@ passport.use(
     {
       clientID: process.env.clientID,
       clientSecret: process.env.clientSecret,
-     // callbackURL:  "http://localhost:3001/auth/facebook/callback"
       callbackURL:  "http://localhost:3001/auth/facebook/callback"
+      //callbackURL:  "http://localhost:3001/auth/facebook/callback"
     },
     async function (accessToken, refreshToken, profile, cb) {
       const user = await User.findOne({
