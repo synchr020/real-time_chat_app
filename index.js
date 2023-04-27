@@ -14,7 +14,7 @@ var io = require('socket.io')(server);
 const botName = "ChatBot";
 const Message = require('./models/messages');
 
-require('dotenv').config()
+require('dotenv').config();
 
 //const dbURL = "mongodb://127.0.0.1:27017/rtapp";
 const dbURL = process.env.dbURL;

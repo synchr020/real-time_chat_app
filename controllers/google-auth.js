@@ -11,7 +11,8 @@ passport.use(
     {
     clientID: process.env.GOOGLE_CLIENT_ID,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-    callbackURL:  "https://rtchatapp.onrender.com/auth/google/callback"
+    callbackURL:  "http://localhost:3001/auth/google/callback"
+    //callbackURL:  "https://rtchatapp.onrender.com/auth/google/callback"
     },
     function (accessToken, refreshToken, profile, done) {
       userProfile = profile;

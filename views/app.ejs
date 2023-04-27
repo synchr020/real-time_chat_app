@@ -110,7 +110,7 @@
             })
             socket.on('friend', ({ mes, user1 }) => {
                 appendMessages2(mes.content, mes.time, mes.dpName);
-                msgForm.msg.value = '';
+                
                 mbox.scrollTop = mbox.scrollHeight;
             })
 

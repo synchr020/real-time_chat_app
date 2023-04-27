@@ -10,7 +10,7 @@ const messageSchema = new mongoose.Schema(
     },
     time:{
        type: String,
-      default:() => moment().format("hh:m a")
+      default:() => moment().utc(7).format("hh:m a")
 
         },
     author:{
