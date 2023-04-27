@@ -9,6 +9,26 @@ border-radius: 2%;
 
 }
 
+.lg-bt{
+font-weight: 500;
+font-size: medium;
+width: 28rem;
+padding: 1.5rem;
+}
+
+.loginbt{
+   
+   
+    display: flex;
+    justify-content: center;
+}
+
+
+.ct-div{
+display: block;
+padding-right: 1.25em;
+}
+
 .b1{
 border-top-left-radius: 0.5rem;
 border-bottom-left-radius: 0.5rem;
@@ -70,15 +90,22 @@ display: block;
     height: 29.9em;
 }
 
-.sbox{
-
-}
 
 .ip1{
-width: 50.6rem;
+width: 52.1rem;
 }
 
 .fb-btn{
 background-color: aqua;
 width: auto;
 }
+
+.signout{
+ margin-top: auto;
+}
+
+.exit {
+margin-top: 0.5rem;
+
+}
+

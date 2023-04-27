@@ -17,7 +17,10 @@ const messageSchema = new mongoose.Schema(
         type: Schema.Types.ObjectId,
         ref: "User",
         //  required:true
-    }
+    },
+    dpName:{
+        type: String
+      }
 
 
   }

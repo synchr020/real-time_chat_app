@@ -9,7 +9,7 @@ const userSchema = new mongoose.Schema(
       trim: true
     },
     //accountId can be google Id, facebook Id, github Id etc.
-    FBId: {
+    GId: {
       type: String
     },
     name: {

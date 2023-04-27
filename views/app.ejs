@@ -30,15 +30,26 @@
                         <p class="on ">Người đang tham gia </p>
 
                     </div>
+
                     <div class="message-body" id="user-board">
 
 
-                        <p class="is-size-5 my-2">
-                            <%=user.displayName %> <span class="tag is-success is-medium">Online</span>
-                        </p>
 
                     </div>
+
                 </article>
+                <div class="signout">
+                    <form action="/auth/google/signout" id="outBtn">
+                        <button class="button is-rounded is-danger is-light is-medium"><span class="exit"><svg
+                                    xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="feather feather-log-out">
+                                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                                    <polyline points="16 17 21 12 16 7"></polyline>
+                                    <line x1="21" y1="12" x2="10" y2="12"></line>
+                                </svg></span>Đăng xuất</button>
+                    </form>
+                </div>
             </div>
 
             <div class="has-background-primary b2 column is-three-quarters ">
@@ -50,39 +61,67 @@
                 <form action="#" id="msgForm">
                     <input class="input is-rounded mt-2 mx-0 ip1" type="text" name="msg"
                         placeholder="Nhập tin nhắn ở đây.">
-                    <button class="button mt-2 ml-1 is-rounded"> Gửi </button>
+                    <button class="button mt-2  is-rounded is-inline"> <span><script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
+<lottie-player src="https://assets8.lottiefiles.com/packages/lf20_7sg1ibsl.json"  background="transparent"  speed="2"  style="width: 30px; height: 30px;"  loop  autoplay></lottie-player> </span>  </button>
 
                 </form>
             </div>
+
         </div>
-        <div>
-            <form action="/auth/facebook/signout" id="outBtn">
-                <button class="button mt-2 ml-1 is-rounded">Đăng xuất</button>
-            </form>
-        </div>
+
         <script>
             const socket = io();
             const mbox = document.querySelector("#mesbox");
             const msgForm = document.getElementById('msgForm');
             const outBtn = document.querySelector("#outBtn");
-            addUsers();
+
+            socket.emit('login',);
+
+            console.log(`<%=user1.id%>`);
+
             appendNotification("Chào mừng bạn đến với đoạn chat!");
 
-            socket.on('message', mes => {
-                console.log(mes);
-                appendMessages(mes.content, mes.time)
+            socket.on('checkonline1', ({ userON }) => {
+                console.log(userON);
+                clearBox();
+                for (var key in userON) {
+                    var value = userON[key];
+                    addUsers(value);
+                }
+            })
+            socket.on('checkonline2', ({ userON }) => {
+                console.log(userON);
+                clearBox();
+                for (var key in userON) {
+                    var value = userON[key];
+                    addUsers(value);
+                }
+            })
+
+            socket.on('message', ({ mes, user1 }) => {
+
+
+                appendMessages(mes.content, mes.time, mes.dpName);
+
+
+
                 msgForm.msg.value = '';
                 mbox.scrollTop = mbox.scrollHeight;
             })
-            
+            socket.on('friend', ({ mes, user1 }) => {
+                appendMessages2(mes.content, mes.time, mes.dpName);
+                msgForm.msg.value = '';
+                mbox.scrollTop = mbox.scrollHeight;
+            })
+
 
             msgForm.addEventListener('submit', e => {
                 e.preventDefault();
                 const mess = msgForm.msg.value;
-            
+
                 console.log(`submit ` + mess);
                 socket.emit('chatmessage', mess);
-                
+
             })
 
             outBtn.addEventListener('submit', e => {
@@ -90,7 +129,7 @@
             })
 
 
-            function appendMessages(message, time) {
+            function appendMessages(message, time, auth) {
 
                 const xxx = document.createElement("div");
 
@@ -98,13 +137,13 @@
 
                         <div class=" message-header has-background-grey-darker is-justify-content-end  mhdy">
                              <span class="time2">${time}</span>
-                            <p><%=user.displayName %></p>
+                            <p>${auth}</p>
 
                         </div>
 
                         <div class=" ">
 
-                            <div class="p-3 has-background-primary msg2  has-text-light">
+                            <div class="p-3 has-background-danger msg2  has-text-light">
                                 <p>${message} 
                                 </p>
                             </div>
@@ -129,6 +168,28 @@
                         </div>
                         <div class=" ">
 
+                            <div class="p-3 has-background-primary msg1 has-text-light">
+                                <p> ${message}
+
+                                </p>
+                            </div>
+                    </article>
+`
+                    ;
+                mbox.appendChild(xxx);
+            }
+            function appendMessages2(message, time, auth) {
+
+                const xxx = document.createElement("div");
+
+                xxx.innerHTML = `<article class=" m-2">
+                        <div class="message-header has-background-grey-darker mhd">
+                            <span class="time2">${time}</span>
+                            <p>${auth}</p>
+                            
+                        </div>
+                        <div class=" ">
+
                             <div class="p-3 has-background-danger msg1 has-text-light">
                                 <p> ${message}
 
@@ -140,14 +201,21 @@
                 mbox.appendChild(xxx);
             }
 
-            function addUsers() {
+            function addUsers(name) {
                 const user = document.querySelector("#user-board");
                 const newUs = document.createElement("div");
                 newUs.innerHTML = `<p class="is-size-5 my-2">
-                            <%=user.displayName %> <span class="tag is-success is-medium">Online</span>
+                            ${name} <span class="tag is-success is-medium">Online</span>
                         </p>`
                 user.appendChild(newUs);
             }
+            function clearBox() {
+                document.getElementById("user-board").innerHTML = "";
+            }
+            function clearChat() {
+                mbox.innerHTML = "";
+            }
+
         </script>
 </body>
 

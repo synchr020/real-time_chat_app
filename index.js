@@ -4,6 +4,7 @@ const passport = require('passport');
 
 const session = require('express-session');
 const facebookRouter = require('./controllers/facebook-auth');
+const googleRouter = require('./controllers/google-auth');
 const app = express();
 const server = require('http').createServer(app);
 const User = require('./models/users');
@@ -19,7 +20,7 @@ require('dotenv').config()
 const dbURL = process.env.dbURL;
 const connectDatabase = async () => {
   try {
-    
+
     console.log(dbURL);
     await mongoose.connect(dbURL);
 
@@ -58,47 +59,70 @@ passport.deserializeUser(function (obj, cb) {
 });
 
 
+const userON = {};
+let messageON = {};
+io.on('connection', async (socket) => {
 
+  console.log('a user connected');
 
-io.on('connection', (socket) => {
+  socket.on('login', async () => {
 
-    Message.find().then(result => {
-        socket.emit('output-messages', result)
-    })
+    console.log(' user ' + socket.user.id + ' connected');
+    // saving userId to object with socket ID
+    const user1 = await User.findOne({ GId: socket.user.id });
+   
+    console.log(user1.name);
+    userON[socket.id] = user1.name;
+    console.log(userON);
+    for (var key in userON) {
+      var value = userON[key];
+      console.log(value);
+    }
+    io.emit('checkonline1', { userON});
 
-    console.log('a user connected');
+  });
 
+  socket.on('disconnect', () => {
+    console.log('user ' + userON[socket.id] + ' disconnected');
+    // remove saved socket from users object
+    console.log(`delete` + userON);
+    delete userON[socket.id];
+    io.emit('checkonline2',{userON});
+  });
+
+  socket.on('chatmessage', async (message) => {
+    console.log(socket.user);
+    const user1 = await User.findOne({ GId: socket.user.id });
     
-    socket.on('disconnect', () => {
-        
-        console.log('user disconnected');
-       
+    auth = user1.name;
+    const user = socket.user.id;
+    console.log(auth);
+    const mes = new Message({
+      content: message,
+      author: user1._id,
+      dpName: user1.name
     });
-
-    socket.on('chatmessage',
-
-      async (message) => {
-       
-        const user1 = await User.find({FBId : socket.user.id});
-        console.log(user1._id);
-        const mes = new Message({
-          content: message,
-         author: user1._id
- });
-         await mes.save();
-         console.log(mes.time);
-         io.emit('message', mes);
-        
-      }
-    )
+    await mes.save();
+    
+    console.log(mes.time);
+    io.to(socket.id).emit('message', { mes, user1 });
+    socket.broadcast.emit('friend',{ mes, user1 } );
+  }
+  )
 
 
 
 
 
-    })
-;
+})
+  ;
 
+app.use(async (req, res, next) => {
+
+  res.locals.currentUser = req.user;
+
+  next();
+})
 
 app.use((req, res, next) => {
   io.on('connection', (socket) => {
@@ -116,6 +140,7 @@ app.get('/chat', (req, res) => {
 })
 
 app.use('/auth/facebook', facebookRouter);
+app.use('/auth/google', googleRouter);
 
 
 server.listen(3001, () => {
