@@ -94,7 +94,7 @@ io.on('connection', async (socket) => {
     console.log(`time =`+ time);
     console.log("noi dung = "+ mess);
 
-    let truetime = moment(time).format('hh:mm a');
+    let truetime = moment(time).format('hh:mm ');
   console.log(truetime);
     const user1 = await User.findOne({ GId: socket.user.id });
     
