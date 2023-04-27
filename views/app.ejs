@@ -82,7 +82,7 @@
             appendNotification("Chào mừng bạn đến với đoạn chat!");
 
             socket.on('checkonline1', ({ userON }) => {
-                console.log(userON);
+                
                 clearBox();
                 for (var key in userON) {
                     var value = userON[key];
@@ -90,7 +90,7 @@
                 }
             })
             socket.on('checkonline2', ({ userON }) => {
-                console.log(userON);
+                
                 clearBox();
                 for (var key in userON) {
                     var value = userON[key];
@@ -98,7 +98,7 @@
                 }
             })
 
-            socket.on('message', ({ mes, user1 }) => {
+            socket.on('message', ({ mes }) => {
 
 
                 appendMessages(mes.content, mes.time, mes.dpName);
@@ -108,7 +108,7 @@
                 msgForm.msg.value = '';
                 mbox.scrollTop = mbox.scrollHeight;
             })
-            socket.on('friend', ({ mes, user1 }) => {
+            socket.on('friend', ({ mes }) => {
                 appendMessages2(mes.content, mes.time, mes.dpName);
                 
                 mbox.scrollTop = mbox.scrollHeight;
@@ -117,10 +117,12 @@
 
             msgForm.addEventListener('submit', e => {
                 e.preventDefault();
+                const time = Date();
                 const mess = msgForm.msg.value;
-
-                console.log(`submit ` + mess);
-                socket.emit('chatmessage', mess);
+                
+                console.log(time);
+                console.log(mess);
+                socket.emit('chatmessage', {mess,time});
 
             })
 

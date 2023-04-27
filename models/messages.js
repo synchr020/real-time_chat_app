@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const moment = require('moment');
+
 
 
 const messageSchema = new mongoose.Schema(
@@ -9,9 +9,8 @@ const messageSchema = new mongoose.Schema(
       type: String
     },
     time:{
-       type: String,
-      default:() => moment().local().format("hh:m a")
-
+       type: String
+      
         },
     author:{
         type: Schema.Types.ObjectId,

@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const passport = require('passport');
 
 const session = require('express-session');
-const facebookRouter = require('./controllers/facebook-auth');
+const moment = require('moment');
 const googleRouter = require('./controllers/google-auth');
 const app = express();
 const server = require('http').createServer(app);
@@ -90,16 +90,21 @@ io.on('connection', async (socket) => {
     io.emit('checkonline2',{userON});
   });
 
-  socket.on('chatmessage', async (message) => {
-    console.log(socket.user);
+  socket.on('chatmessage', async ({mess,time}) => {
+    console.log(`time =`+ time);
+    console.log("noi dung = "+ mess);
+
+    let truetime = moment(time).format('hh:mm a');
+  console.log(truetime);
     const user1 = await User.findOne({ GId: socket.user.id });
     
     auth = user1.name;
-    const user = socket.user.id;
-    console.log(auth);
+    
+    
     const mes = new Message({
-      content: message,
+      content: mess,
       author: user1._id,
+      time: truetime,
       dpName: user1.name
     });
     await mes.save();
@@ -139,7 +144,6 @@ app.get('/chat', (req, res) => {
   res.render("app");
 })
 
-app.use('/auth/facebook', facebookRouter);
 app.use('/auth/google', googleRouter);
 
 
