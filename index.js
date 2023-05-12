@@ -3,7 +3,7 @@ const mongoose = require("mongoose")
 const passport = require('passport');
 
 const session = require('express-session');
-const moment = require('moment');
+const moment = require('moment-timezone');
 const googleRouter = require('./controllers/google-auth');
 const app = express();
 const server = require('http').createServer(app);
@@ -70,7 +70,7 @@ io.on('connection', async (socket) => {
     console.log(' user ' + socket.user.id + ' connected');
     // saving userId to object with socket ID
     const user1 = await User.findOne({ GId: socket.user.id });
-   
+
     console.log(user1.name);
     userON[socket.id] = user1.name;
     console.log(userON);
@@ -78,7 +78,7 @@ io.on('connection', async (socket) => {
       var value = userON[key];
       console.log(value);
     }
-    io.emit('checkonline1', { userON});
+    io.emit('checkonline1', { userON });
 
   });
 
@@ -87,31 +87,49 @@ io.on('connection', async (socket) => {
     // remove saved socket from users object
     console.log(`delete` + userON);
     delete userON[socket.id];
-    io.emit('checkonline2',{userON});
+    io.emit('checkonline2', { userON });
   });
 
-  socket.on('chatmessage', async ({mess,time}) => {
-    console.log(`time =`+ time);
-    console.log("noi dung = "+ mess);
+  socket.on('chatmessage', async ({ mess, time }) => {
+    d = new Date();
+    // console.log('new date '+ d);
+    // let  datetext = d.toTimeString();
+    // datetext = datetext.split(' ')[0].slice(0,6);
+    
+    const format1 = "YYYY-MM-DD HH:mm:ss"
+    const format2 = "YYYY-MM-DD"
+    var date1 = new Date("2020-06-24 22:57:36");
+    var date2 = new Date();
+    let date3 = date2.toUTCString();
+    
+    let a = moment.tz(date2, 'Asia/Rangoon').format('h:mm a');
+    console.log('a = '+ a);
 
-    let truetime = moment(time).format('hh:mm ');
-  console.log(truetime);
+    date3 = date3.slice(0,6);
+    console.log(`test` +date3);
+    dateTime1 = moment(date1).format(format1);
+    dateTime2 = moment().format(format2);
+
+    console.log(dateTime1 +" va " + dateTime2);
+
+    let truetime = moment(date2).format('hh:m a ');
+    console.log(truetime);
     const user1 = await User.findOne({ GId: socket.user.id });
-    
+
     auth = user1.name;
-    
-    
+
+
     const mes = new Message({
       content: mess,
       author: user1._id,
-      time: truetime,
+      time: a,
       dpName: user1.name
     });
     await mes.save();
-    
+
     console.log(mes.time);
     io.to(socket.id).emit('message', { mes, user1 });
-    socket.broadcast.emit('friend',{ mes, user1 } );
+    socket.broadcast.emit('friend', { mes, user1 });
   }
   )
 
